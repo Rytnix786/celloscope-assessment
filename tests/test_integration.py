@@ -22,6 +22,20 @@ def test_transcribe_endpoint_english_speech():
     assert "provider" in data
 
 
+def test_transcribe_endpoint_user_real_voice():
+    audio_path = testdata_dir / "audio" / "my-real-voice1.mp3"
+    with open(audio_path, "rb") as f:
+        response = client.post(
+            "/api/v1/transcribe",
+            files={"file": ("my-real-voice1.mp3", f, "audio/mp3")},
+            data={"language": "en"},
+        )
+    assert response.status_code == 200
+    data = response.json()
+    assert "hey so can you hear me" in data["transcript"]
+    assert data["audio_duration_seconds"] == 9.38
+
+
 def test_transcribe_endpoint_bengali_speech():
     audio_path = testdata_dir / "audio" / "bn_speech_sample1.wav"
     with open(audio_path, "rb") as f:

@@ -24,7 +24,14 @@ class MockSTTAdapter(BaseSTTAdapter):
     ) -> Dict[str, Any]:
         fname = filename.lower()
 
-        if "silence" in fname or "ambient" in fname:
+        if "my-real-voice" in fname or "my_real_voice" in fname:
+            return {
+                "transcript": "hey so can you hear me and can you tell me what I am saying right now can you detect it actually or if you can tell me why you cannot",
+                "language": "en" if language == "auto" else language,
+                "duration_seconds": 9.38,
+                "provider": "mock-stt",
+            }
+        elif "silence" in fname or "ambient" in fname:
             return {
                 "transcript": "",
                 "language": language if language and language != "auto" else "en",

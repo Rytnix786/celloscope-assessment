@@ -12,6 +12,7 @@ def test_testdata_files_exist_and_non_empty():
         "audio/bn_speech_sample1.wav",
         "audio/silence.wav",
         "audio/ambient_noise.wav",
+        "audio/my-real-voice1.mp3",
         "transcripts/reference_transcripts.json",
         "documents/positive/clean_cbc_report.png",
         "documents/positive/clean_biochemistry_report.png",
@@ -51,6 +52,8 @@ def test_reference_transcripts_json_schema():
     assert "bn_speech_sample1.wav" in data
     assert "silence.wav" in data
     assert "ambient_noise.wav" in data
+    assert "my-real-voice1.mp3" in data
 
     assert data["en_speech_sample1.wav"]["language"] == "en"
     assert data["bn_speech_sample1.wav"]["language"] == "bn"
+    assert data["my-real-voice1.mp3"]["language"] == "en"

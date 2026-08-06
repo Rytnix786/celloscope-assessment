@@ -3,7 +3,7 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-green.svg)](https://fastapi.tiangolo.com/)
 [![Docker Compose](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
-[![CI/CD Pipeline](https://github.com/Rytnix786/celloscope-assessment/actions/workflows/ci.yml/badge.svg)](https://github.com/Rytnix786/celloscope-assessment/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://img.shields.io/github/actions/workflow/status/Rytnix786/celloscope-assessment/ci.yml?branch=main&label=CI%2FCD%20Pipeline)](https://github.com/Rytnix786/celloscope-assessment/actions)
 [![Tests](https://img.shields.io/badge/Tests-25%20Passed-brightgreen.svg)]()
 
 FastAPI microservice providing multi-lingual audio transcription (Bengali `bn` and English `en`) and medical lab report extraction capabilities. Built with a strict 3-layer architecture (`api/`, `services/`, `adapters/`), typed configuration settings, zero-credential mock mode, and non-hallucinating canonical value normalization.

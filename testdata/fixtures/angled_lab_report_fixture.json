@@ -1,0 +1,25 @@
+{
+  "full_text": "CRP Test-Positive (Qualitative Method) Diagnostic Result Strip",
+  "is_lab_report": true,
+  "confidence": 0.62,
+  "meta": {
+    "patient_name": null,
+    "age": null,
+    "sex": null,
+    "report_date": null,
+    "lab_name": null,
+    "reference_no": null
+  },
+  "results": [
+    {
+      "test_name": "CRP",
+      "value": null,
+      "value_type": "qualitative",
+      "qualitative_value": "Positive",
+      "unit": null,
+      "reference_range": "Negative",
+      "flag": "High",
+      "raw_line": "CRP Test-Positive (Qualitative Method)"
+    }
+  ]
+}

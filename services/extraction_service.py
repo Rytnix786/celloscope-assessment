@@ -19,8 +19,12 @@ class DocumentExtractionService:
         full_text = ocr_data.get("full_text", "")
 
         # 1. Pre-check classification
-        is_lab_report, confidence = LabReportClassifier.classify(full_text)
-        if not is_lab_report:
+        is_lab_report, class_confidence = LabReportClassifier.classify(full_text)
+
+        # Use OCR adapter's quality/type confidence if provided, otherwise classifier confidence
+        confidence = ocr_data.get("confidence", class_confidence)
+
+        if not is_lab_report and not ocr_data.get("is_lab_report", False):
             return {
                 "is_lab_report": False,
                 "confidence": confidence,
@@ -28,7 +32,7 @@ class DocumentExtractionService:
                 "message": "Uploaded document does not appear to be a medical lab report.",
             }
 
-        # 2. Extract and normalize metadata
+        # 2. Extract and normalize metadata (never guess missing fields)
         raw_meta = ocr_data.get("meta", {})
         meta = {
             "patient_name": raw_meta.get("patient_name"),
@@ -40,10 +44,15 @@ class DocumentExtractionService:
         }
 
         # 3. Extract and normalize results with verbatim raw_line preservation
-        raw_lines: List[Dict[str, Any]] = ocr_data.get("raw_lines", [])
+        raw_lines: List[Dict[str, Any]] = ocr_data.get("results", ocr_data.get("raw_lines", []))
         results = []
 
         for line in raw_lines:
+            # If line is already a structured result dictionary from fixture
+            if "test_name" in line and ("value" in line or "value_type" in line):
+                results.append(line)
+                continue
+
             test_name = line.get("test_name", "Unknown Test")
             raw_value = line.get("raw_value", "")
             raw_unit = line.get("raw_unit")

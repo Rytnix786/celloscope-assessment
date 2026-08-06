@@ -2,20 +2,26 @@ from typing import Tuple
 
 
 class LabReportClassifier:
-    """Classifies whether a document's extracted text is a valid medical lab report."""
+    """Classifies whether a document's extracted text is a valid medical lab report or diagnostic screen."""
 
     KEYWORD_WEIGHTS = {
         "LABORATORY": 0.25,
-        "DIAGNOSTIC": 0.2,
-        "PATIENT": 0.2,
-        "REFERENCE NO": 0.2,
+        "DIAGNOSTIC": 0.20,
+        "PATIENT": 0.20,
+        "REFERENCE NO": 0.20,
         "TEST NAME": 0.25,
-        "RESULT": 0.2,
+        "RESULT": 0.20,
         "REFERENCE RANGE": 0.25,
         "UNIT": 0.15,
-        "HEMOGLOBIN": 0.2,
-        "PATHOLOGY": 0.2,
+        "HEMOGLOBIN": 0.20,
+        "PATHOLOGY": 0.20,
         "BLOOD": 0.15,
+        "WBC": 0.20,
+        "RBC": 0.20,
+        "HGB": 0.20,
+        "HCT": 0.15,
+        "PLT": 0.20,
+        "CRP": 0.25,
     }
 
     @classmethod

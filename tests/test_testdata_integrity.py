@@ -17,7 +17,10 @@ def test_testdata_files_exist_and_non_empty():
         "documents/angled_lab_report.jpg",
         "documents/gnuhealth_lab_report.png",
         "documents/non_lab_receipt.jpg",
-        "fixtures/sample_lab_report.json",
+        "fixtures/clean_lab_report_fixture.json",
+        "fixtures/angled_lab_report_fixture.json",
+        "fixtures/gnuhealth_lab_report_fixture.json",
+        "fixtures/non_lab_receipt_fixture.json",
         "fixtures/sample_transcription.json",
     ]
 

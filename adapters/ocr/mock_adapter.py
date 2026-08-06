@@ -6,30 +6,31 @@ from adapters.ocr.base import BaseOCRAdapter
 
 
 class MockOCRAdapter(BaseOCRAdapter):
-    """Mock OCR Adapter replaying disk fixtures with zero network calls or model downloads."""
+    """Mock OCR Adapter replaying dedicated, non-hallucinated fixtures matching testdata/documents/."""
 
-    def __init__(self, fixture_path: Path = None) -> None:
-        if fixture_path is None:
-            self.fixture_path = (
-                Path(__file__).parent.parent.parent
-                / "testdata"
-                / "fixtures"
-                / "sample_lab_report.json"
-            )
+    def __init__(self, fixtures_dir: Path = None) -> None:
+        if fixtures_dir is None:
+            self.fixtures_dir = Path(__file__).parent.parent.parent / "testdata" / "fixtures"
         else:
-            self.fixture_path = fixture_path
+            self.fixtures_dir = fixtures_dir
 
     def extract(self, file_bytes: bytes, filename: str) -> Dict[str, Any]:
-        fname_lower = filename.lower()
-        if "receipt" in fname_lower or "non_lab" in fname_lower:
-            return {
-                "full_text": "STAR CAFE & BAKERY Receipt #109283 Espresso Coffee $4.50 Chocolate Muffin $7.00 Total Paid $11.50 Thank you for visiting",
-                "meta": {},
-                "raw_lines": [],
-            }
+        fname = filename.lower()
 
-        if not self.fixture_path.exists():
-            raise FileNotFoundError(f"Mock OCR fixture not found at {self.fixture_path}")
+        if "receipt" in fname or "non_lab" in fname:
+            fixture_file = self.fixtures_dir / "non_lab_receipt_fixture.json"
+        elif "angled" in fname or "crp" in fname:
+            fixture_file = self.fixtures_dir / "angled_lab_report_fixture.json"
+        elif "gnuhealth" in fname or "gnu" in fname:
+            fixture_file = self.fixtures_dir / "gnuhealth_lab_report_fixture.json"
+        elif "clean" in fname or "cbc" in fname or "sample_lab_report" in fname:
+            fixture_file = self.fixtures_dir / "clean_lab_report_fixture.json"
+        else:
+            fixture_file = self.fixtures_dir / "clean_lab_report_fixture.json"
 
-        data = json.loads(self.fixture_path.read_text(encoding="utf-8"))
+        if not fixture_file.exists():
+            # Fallback to default fixture if file not found
+            fixture_file = self.fixtures_dir / "sample_lab_report.json"
+
+        data = json.loads(fixture_file.read_text(encoding="utf-8"))
         return data

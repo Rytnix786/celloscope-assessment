@@ -13,9 +13,9 @@ def test_testdata_files_exist_and_non_empty():
         "audio/silence.wav",
         "audio/ambient_noise.wav",
         "transcripts/reference_transcripts.json",
-        "documents/clean_lab_report.png",
-        "documents/angled_lab_report.png",
-        "documents/non_lab_receipt.png",
+        "documents/clean_lab_report.jpg",
+        "documents/angled_lab_report.jpg",
+        "documents/non_lab_receipt.jpg",
         "fixtures/sample_lab_report.json",
         "fixtures/sample_transcription.json",
     ]

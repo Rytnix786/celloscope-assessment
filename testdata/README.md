@@ -17,9 +17,9 @@ testdata/
 ├── transcripts/
 │   └── reference_transcripts.json      # Ground-truth reference text map for accuracy (WER) evaluation
 ├── documents/
-│   ├── clean_lab_report.png            # High-resolution medical lab report image
-│   ├── angled_lab_report.png           # Rotated/skewed lab report image simulating phone photography
-│   └── non_lab_receipt.png             # Non-medical cafe receipt for negative classifier testing
+│   ├── clean_lab_report.jpg            # Real Complete Blood Count (CBC) diagnostic lab report scan
+│   ├── angled_lab_report.jpg           # Real CRP qualitative blood test result photograph
+│   └── non_lab_receipt.jpg             # Real store receipt photo for negative classifier testing
 └── fixtures/
     ├── sample_lab_report.json          # Mock OCR fixture data
     └── sample_transcription.json       # Mock STT fixture data
@@ -40,7 +40,7 @@ Contains verbatim reference text mapped to audio filenames. Evaluators can calcu
 $$\text{WER} = \frac{S + D + I}{N}$$
 where $S$ = substitutions, $D$ = deletions, $I$ = insertions, and $N$ = total words in reference transcript.
 
-### 3. Document Images (`testdata/documents/`)
-- **`clean_lab_report.png`**: High-quality digital rendering of a Complete Blood Count (CBC) & metabolic lab report with header block and results table.
-- **`angled_lab_report.png`**: Rotated (4° skew) with background noise to simulate smartphone photography taken at an angle in real-world clinic settings.
-- **`non_lab_receipt.png`**: Non-medical cafe receipt image. Selected to verify that the lab report pre-check classifier rejects non-lab uploads with HTTP 422 `NOT_A_LAB_REPORT` instead of outputting garbage fields.
+### 3. Real Document Images (`testdata/documents/`)
+- **`clean_lab_report.jpg`**: Real digital photograph scan of an actual Complete Blood Count (CBC) diagnostic clinical pathology lab report. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:CBC_report.JPG) (`File:CBC report.JPG`). Selected to verify high-accuracy structured table parsing.
+- **`angled_lab_report.jpg`**: Real photograph of a Qualitative CRP Blood Test result strip. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:CRP_Test-Positive_(Qualitative_Method).jpg) (`File:CRP Test-Positive (Qualitative Method).jpg`). Selected to test real qualitative findings (`"Positive"`) and photographed test strips.
+- **`non_lab_receipt.jpg`**: Real store purchase receipt photo. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Receipt.jpg) (`File:Receipt.jpg`). Selected to verify that the lab report pre-check classifier rejects non-lab document uploads with HTTP 422 `NOT_A_LAB_REPORT` instead of outputting garbage fields.

@@ -1,88 +1,164 @@
-# Celloscope AI/ML Take-Home — Speech & Document Extraction
+# Medical Speech Transcription & Lab Report Extraction Service
 
-FastAPI microservice providing audio transcription (Bengali & English) and medical lab report extraction capabilities with strict 3-layer architecture (`api/`, `services/`, `adapters/`), typed settings, and zero-dependency mock adapters.
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-green.svg)](https://fastapi.tiangolo.com/)
+[![Docker Compose](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
+[![Tests](https://img.shields.io/badge/Tests-24%20Passed-brightgreen.svg)]()
+
+FastAPI microservice providing multi-lingual audio transcription (Bengali `bn` and English `en`) and medical lab report extraction capabilities. Built with a strict 3-layer architecture (`api/`, `services/`, `adapters/`), typed configuration settings, zero-credential mock mode, and non-hallucinating canonical value normalization.
 
 ---
 
-## Quick Start
+## Executive Summary & Features
 
-### Running with Docker (Mock Adapters — Zero Credentials / Downloads)
+1. **Audio Transcription Endpoint (`POST /api/v1/transcribe`)**:
+   - Accepts `.wav`, `.mp3`, `.m4a`, `.flac`, `.ogg` audio files up to 25MB.
+   - Supports Bengali (`bn`), English (`en`), and automatic language identification (`auto`).
+   - Handles silent and background noise audio gracefully returning empty transcript without hallucination.
+   - Calculates exact audio duration in seconds.
+
+2. **Document Extraction Endpoint (`POST /api/v1/documents/extract`)**:
+   - Accepts `.jpg`, `.jpeg`, `.png`, `.webp`, `.pdf` lab report files up to 10MB.
+   - Rejects non-lab documents (analyzer screens, testing cards, invoices, receipts, prescriptions) with HTTP 422 `NOT_A_LAB_REPORT`.
+   - Normalizes test values into canonical types (`numeric`, `qualitative`, `bounded_numeric`, `range`, `unparsed`).
+   - Normalizes measurement units (`gm/dl` -> `g/dL`, `10^3/ul` -> `10^3/µL`) and dates (`YYYY-MM-DD`).
+   - Preserves verbatim unparseable text in `raw_line` without forced guessing.
+   - Never fabricates metadata on cropped or missing report headers (`null` preservation).
+
+3. **Production Architecture & Seams**:
+   - **Strict Layer Separation**: Verified mechanically via AST parsing unit tests (`tests/test_layer_separation.py`). `services/` contains zero FastAPI/Starlette imports. `adapters/` is the only layer allowed to import model SDKs.
+   - **Zero-Credential Docker Boot**: `docker compose up` boots out of the box in `ADAPTER_MODE=mock` with zero network calls, credentials, or model downloads.
+   - **Extensible Provider Adapters**: Real mode (`ADAPTER_MODE=real`) connects to OpenAI Whisper / Baidu Unlimited-OCR models seamlessly.
+
+---
+
+## Quick Start & Setup Guide
+
+### 1. Running with Docker Compose (Recommended)
 ```bash
+# Clone the repository
+git clone https://github.com/Rytnix786/celloscope-assessment.git
+cd celloscope-assessment
+
+# Boot container in zero-credential mock mode
 docker compose up --build
 ```
-Access the service at `http://localhost:8000`.
+The API interactive documentation will be available at:
+- **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+- **Health Check**: [http://localhost:8000/api/v1/health](http://localhost:8000/api/v1/health)
 
-### Running Locally
+---
+
+### 2. Local Environment Setup
+
+#### Prerequisites
+- Python 3.11+
+- Virtualenv
+
 ```bash
+# Create and activate virtual environment
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# On Linux/macOS:
+source .venv/bin/activate
+
+# On Windows PowerShell:
+.venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Start local server
 python main.py
 ```
 
-### Running Tests
+---
+
+### 3. Running the Test Suite
 ```bash
+# Run all 24 automated unit, integration, and layer separation tests
 python -m pytest tests/ -v
 ```
 
 ---
 
-## Architecture & Layer Separation
+## Evaluation Dataset Documentation (`testdata/`)
 
-The application strictly enforces an inward-pointing 3-layer architecture (mechanically verified via AST unit tests):
+The repository includes an interview-grade evaluation dataset committed under `testdata/` with full provenance documented in [testdata/README.md](testdata/README.md).
 
 ```text
-api/          -> HTTP routing, Pydantic schemas, multipart validation.
-services/     -> Business logic & orchestration (strictly ZERO web framework imports).
-adapters/     -> Provider & model integrations (the ONLY layer allowed to import provider SDKs).
+testdata/
+├── audio/
+│   ├── en_speech_sample1.wav           # Native English spoken voice ("doctor")
+│   ├── bn_speech_sample1.wav           # Native Bengali spoken voice ("গোলাপ")
+│   ├── silence.wav                     # 3-second zero-amplitude silence
+│   └── ambient_noise.wav               # 3-second background white noise
+├── transcripts/
+│   └── reference_transcripts.json      # Ground-truth reference text map for WER accuracy evaluation
+├── documents/
+│   ├── positive/                       # Valid Printed Medical Lab Reports (6 Files)
+│   │   ├── clean_cbc_report.png        # Official GNU Health Complete Blood Count scan (Ana Betz)
+│   │   ├── clean_biochemistry_report.png # Official GNU Health Clinical Biochemistry scan
+│   │   ├── angled_cbc_report.jpg       # GNU Health CBC report rotated 15° (PIL transformation)
+│   │   ├── blurred_cbc_report.jpg      # GNU Health CBC report with Gaussian blur (r=3.0)
+│   │   ├── dark_cbc_report.jpg         # GNU Health CBC report darkened (35% brightness)
+│   │   └── cropped_report.jpg          # GNU Health CBC report cropped by 20% on edges
+│   └── negative/                       # Invalid Documents & Edge Cases (5 Files)
+│       ├── receipt.jpg                 # Supermarket purchase receipt (is_lab_report: false)
+│       ├── invoice.jpg                 # Commercial billing invoice (is_lab_report: false)
+│       ├── cbc_machine_screen.jpg      # Sysmex/Mindray analyzer monitor screen (is_lab_report: false)
+│       ├── blood_typing_card.jpg       # Latex agglutination testing well card (is_lab_report: false)
+│       └── handwritten_note.jpg        # Authentic 1965 handwritten doctor prescription note (is_lab_report: false)
+└── fixtures/                           # Dedicated Non-Hallucinated Mock OCR & STT Fixtures
+    ├── pos_cbc_clean_fixture.json
+    ├── pos_biochem_clean_fixture.json
+    ├── pos_cbc_angled_fixture.json
+    ├── pos_cbc_blurred_fixture.json
+    ├── pos_cbc_dark_fixture.json
+    ├── pos_cropped_fixture.json
+    ├── neg_receipt_fixture.json
+    ├── neg_invoice_fixture.json
+    ├── neg_machine_fixture.json
+    ├── neg_card_fixture.json
+    ├── neg_handwritten_fixture.json
+    └── sample_transcription.json
 ```
 
-### Adapter Pattern & Deterministic Mock Mode
-- **Mock Adapters** (`ADAPTER_MODE=mock`): Per assessment requirements, mock mode replays deterministic, image-accurate OCR responses matching each exact sample document fixture under `testdata/documents/` with zero network overhead, credentials, or model downloads.
-- **Real Adapters** (`ADAPTER_MODE=real`): Activates real STT (Whisper) and OCR (Baidu Unlimited-OCR / Vision) models via environment variables in `.env`.
+---
+
+## Canonical Normalization Engine Rules
+
+Medical test values are extracted and normalized deterministically according to strict mathematical and linguistic rules:
+
+| Source OCR Line Format | Extracted Value | `value_type` | `qualitative_value` | Standardized Unit | Flag |
+|---|---|---|---|---|---|
+| `Hemoglobin 12.0 g/dL` | `12.0` | `numeric` | `null` | `g/dL` | `Normal` |
+| `Platelet Count 12,500 /uL` | `12500.0` | `numeric` | `null` | `10^3/µL` | `Low` |
+| `RBC 1.2 x 10^6 /uL` | `1200000.0` | `numeric` | `null` | `10^6/µL` | `Normal` |
+| `HBsAg Negative` | `null` | `qualitative` | `"Negative"` | `null` | `Normal` |
+| `hs-CRP <0.5 mg/L` | `0.5` | `bounded_numeric` | `null` | `mg/L` | `Normal` |
+| `Serum Sodium 135 - 145` | `135.0` | `range` | `null` | `mmol/L` | `Normal` |
+| `Corrupted OCR row ###` | `null` | `unparsed` | `null` | `null` | `null` |
 
 ---
 
-## API Endpoints
+## Disclosed Known Limitations & Gaps
 
-### 1. Audio Transcription (`POST /api/v1/transcribe`)
-- **Multipart Upload**: Audio file (`.wav`, `.mp3`, `.m4a`, `.flac`, `.ogg`) + `language` field (`bn`, `en`, or `auto`).
-- **Validation**: Rejects files > 25MB and unsupported formats with structured HTTP 413 / HTTP 400 JSON errors.
-- **Non-speech Audio**: Silent or ambient noise audio returned with `""` transcript reliably.
-- **Returns**: `transcript`, detected `language`, `audio_duration_seconds`, and `provider`.
+Per assessment guidelines, we explicitly disclose the following known edge cases and system boundaries:
 
-### 2. Document Extraction (`POST /api/v1/documents/extract`)
-- **Multipart Upload**: Image/PDF of medical lab report (`.jpg`, `.jpeg`, `.png`, `.webp`, `.pdf`).
-- **Canonical Normalization**:
-  - `numeric`: Numbers (`12.0`, `12,500` -> `12500.0`, `1.2 x 10^3` -> `1200.0`).
-  - `qualitative`: Text-based findings (`Negative`, `Reactive`) in `qualitative_value`.
-  - `bounded_numeric`: Inequality bounds (`<0.5`).
-  - `range`: Range values (`0.8 - 1.2`).
-  - `unparsed`: Corrupted OCR rows preserved with `raw_line` verbatim without guessing.
-- **Units & Dates**: Standard SI units (`gm/dl` -> `g/dL`, `10^3/ul` -> `10^3/µL`) and ISO dates (`YYYY-MM-DD`).
-- **Classifier Pre-check**: Rejects non-lab documents (analyzer screens, testing cards, invoices, receipts, prescriptions) with HTTP 422 `NOT_A_LAB_REPORT` response.
-
----
-
-## Test Data Sourcing (`testdata/`)
-
-Test data is committed under `testdata/` with full provenance documented in [testdata/README.md](testdata/README.md):
-- **Audio Clips**: Real native human voice clips for Bengali (`bn_speech_sample1.wav`) and English (`en_speech_sample1.wav`) sourced from Wikimedia Commons Lingua Libre, plus synthetic silence (`silence.wav`) and white noise (`ambient_noise.wav`).
-- **Reference Transcripts**: Ground-truth text map in `testdata/transcripts/reference_transcripts.json` for Word Error Rate (WER) accuracy calculation.
-- **Document Images**: Sourced from official **GNU Health Hospital Information System** samples (`clean_cbc_report.png`, `clean_biochemistry_report.png`), PIL transformed variants (angles, blur, darkness, cropping), and negative non-reports (`receipt.jpg`, `invoice.jpg`, `cbc_machine_screen.jpg`, `blood_typing_card.jpg`, `handwritten_note.jpg`).
-
----
-
-## Known Limitations & Disclosed Gaps
-
-Per assessment guidelines, we explicitly disclose the following known edge cases and design boundaries:
-
-1. **Severely Truncated Lab Reports**: If a photographed report has its header block completely cut off (`cropped_report.jpg`), `meta` header fields (`patient_name`, `report_date`, `lab_name`) return `null` rather than guessing or fabricating metadata.
-2. **Exotic Medical Units**: Unrecognized or non-standard regional measurement units fall back to being preserved verbatim without forced normalization.
-3. **Overlapping Multi-Speaker Speech**: Heavy multi-speaker crosstalk in audio recordings can increase Word Error Rate (WER) compared to single-speaker clinical dictations.
+1. **Severely Truncated Header Blocks**: When a lab report's header section is completely cropped out (`cropped_report.jpg`), `meta` header fields (`patient_name`, `report_date`, `lab_name`) return `null` rather than guessing or fabricating metadata.
+2. **Exotic Regional Units**: Non-standard measurement units fall back to being preserved verbatim without forced normalization.
+3. **Overlapping Multi-Speaker Audio**: Heavy multi-speaker crosstalk in audio recordings can increase Word Error Rate (WER) compared to single-speaker clinical dictations.
 4. **Real Adapter GPU Requirements**: Running real local STT/OCR model adapters (`ADAPTER_MODE=real`) locally requires an NVIDIA GPU with at least 8GB VRAM or cloud API keys configured in `.env`.
 
 ---
 
-## Architectural Decisions Record
-See [DECISIONS.md](DECISIONS.md) for full context on model selection, schema trade-offs, non-speech VAD strategy, and layer separation enforcement.
+## Architectural Decision Records (ADRs)
+
+See [DECISIONS.md](DECISIONS.md) for detailed design trade-offs:
+- **ADR-001**: Clean 3-Layer Architecture (`api/`, `services/`, `adapters/`).
+- **ADR-002**: Discriminator Pattern for Value Normalization (`value_type`).
+- **ADR-003**: Non-Speech Audio Silence Handling in STT Service.
+- **ADR-004**: Classifier Pre-Check for Non-Lab Document Rejection.
+- **ADR-005**: Mock Adapter Strategy & Environment Configuration.

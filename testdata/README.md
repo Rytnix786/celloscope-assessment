@@ -19,6 +19,7 @@ testdata/
 ├── documents/
 │   ├── clean_lab_report.jpg            # Real Complete Blood Count (CBC) diagnostic lab report scan
 │   ├── angled_lab_report.jpg           # Real CRP qualitative blood test result photograph
+│   ├── gnuhealth_lab_report.png        # Real GNU Health electronic clinical pathology report
 │   └── non_lab_receipt.jpg             # Real store receipt photo for negative classifier testing
 └── fixtures/
     ├── sample_lab_report.json          # Mock OCR fixture data
@@ -43,4 +44,5 @@ where $S$ = substitutions, $D$ = deletions, $I$ = insertions, and $N$ = total wo
 ### 3. Real Document Images (`testdata/documents/`)
 - **`clean_lab_report.jpg`**: Real digital photograph scan of an actual Complete Blood Count (CBC) diagnostic clinical pathology lab report. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:CBC_report.JPG) (`File:CBC report.JPG`). Selected to verify high-accuracy structured table parsing.
 - **`angled_lab_report.jpg`**: Real photograph of a Qualitative CRP Blood Test result strip. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:CRP_Test-Positive_(Qualitative_Method).jpg) (`File:CRP Test-Positive (Qualitative Method).jpg`). Selected to test real qualitative findings (`"Positive"`) and photographed test strips.
+- **`gnuhealth_lab_report.png`**: Real electronic health record lab report layout from GNU Health open-source clinical pathology system. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gnuhealth_lab_test_report.png) (`File:Gnuhealth lab test report.png`). Selected to test digital EHR report layouts.
 - **`non_lab_receipt.jpg`**: Real store purchase receipt photo. Sourced from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Receipt.jpg) (`File:Receipt.jpg`). Selected to verify that the lab report pre-check classifier rejects non-lab document uploads with HTTP 422 `NOT_A_LAB_REPORT` instead of outputting garbage fields.

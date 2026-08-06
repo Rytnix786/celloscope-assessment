@@ -31,6 +31,11 @@ class ValueNormalizer:
         if cleaned.upper() in cls.QUALITATIVE_TERMS:
             return None, cleaned, "qualitative"
 
+        # Range value match (e.g. 0.8 - 1.2 or 0.8-1.2)
+        range_match = re.match(r"^([0-9.]+)\s*-\s*([0-9.]+)$", cleaned)
+        if range_match:
+            return None, cleaned, "range"
+
         # Bounded numeric (<0.5, >100, <=10)
         bounded_match = re.match(r"^([<>]=?)\s*([0-9.,]+)$", cleaned)
         if bounded_match:

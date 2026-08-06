@@ -28,7 +28,7 @@ testdata/
 │       ├── invoice.jpg                 # Commercial billing invoice (is_lab_report: false)
 │       ├── cbc_machine_screen.jpg      # Sysmex/Mindray analyzer monitor screen (is_lab_report: false)
 │       ├── blood_typing_card.jpg       # Latex agglutination testing well card (is_lab_report: false)
-│       └── handwritten_note.jpg        # Doctor handwritten prescription note (is_lab_report: false)
+│       └── handwritten_note.jpg        # Doctor handwritten medical prescription note (is_lab_report: false)
 └── fixtures/                           # 11 Dedicated Non-Hallucinated OCR & STT Fixtures
     ├── pos_cbc_clean_fixture.json
     ├── pos_biochem_clean_fixture.json
@@ -69,7 +69,7 @@ where $S$ = substitutions, $D$ = deletions, $I$ = insertions, and $N$ = total wo
 
 ### 4. Invalid Documents & Edge Cases (`testdata/documents/negative/`)
 - **`receipt.jpg`**: Store purchase receipt (`File:Receipt.jpg` on Wikimedia Commons). Verified rejection: HTTP 422 `NOT_A_LAB_REPORT` (`is_lab_report: false`).
-- **`invoice.jpg`**: Commercial billing invoice (`File:World-report-on-hearing---infographic.jpg` on Wikimedia Commons). Verified rejection: HTTP 422 (`is_lab_report: false`).
+- **`invoice.jpg`**: Commercial billing invoice (`File:Invoice.jpg` on Wikimedia Commons). Verified rejection: HTTP 422 (`is_lab_report: false`).
 - **`cbc_machine_screen.jpg`**: Sysmex/Mindray hematology analyzer monitor screen (`File:CBC report.JPG` on Wikimedia Commons). Correctly classified as `is_lab_report: false` (`confidence: 0.25`) to prevent patient metadata hallucination.
 - **`blood_typing_card.jpg`**: Latex agglutination testing well card (`File:CRP Test-Positive_(Qualitative Method).jpg` on Wikimedia Commons). Classified as `is_lab_report: false` (`confidence: 0.15`).
-- **`handwritten_note.jpg`**: Doctor handwritten prescription note (`File:A blood test and examination - NARA - 513715.jpg` on Wikimedia Commons). Classified as `is_lab_report: false` (`confidence: 0.20`).
+- **`handwritten_note.jpg`**: Medical doctor prescription note (`File:MedicalCannabisPrescription_NY.jpg` on Wikimedia Commons). Classified as `is_lab_report: false` (`confidence: 0.20`).

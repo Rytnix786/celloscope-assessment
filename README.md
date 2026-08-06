@@ -37,29 +37,28 @@ services/     -> Business logic & orchestration (strictly ZERO web framework imp
 adapters/     -> Provider & model integrations (the ONLY layer allowed to import provider SDKs).
 ```
 
-### Adapter Pattern & Configuration
-- **Mock Adapters** (`ADAPTER_MODE=mock`): Replays static disk fixtures with zero network overhead, credentials, or model downloads.
-- **Real Adapters** (`ADAPTER_MODE=real`): Activates real STT (Whisper) and OCR (Baidu Unlimited-OCR / Vision) models via environment variables in `.env`.
-
 ---
 
-## Document Extraction API (`POST /api/v1/documents/extract`)
+## API Endpoints
 
-### Canonical Schema & Normalization
-Medical lab report extraction normalizes values, units, and dates into a canonical representation while preserving `raw_line` verbatim:
+### 1. Audio Transcription (`POST /api/v1/transcribe`)
+- **Multipart Upload**: Audio file (`.wav`, `.mp3`, `.m4a`, `.flac`, `.ogg`) + `language` field (`bn`, `en`, or `auto`).
+- **Validation**: Rejects files > 25MB and unsupported formats with structured HTTP 413 / HTTP 400 JSON errors.
+- **Non-speech Audio**: Silent or ambient noise audio returned with `""` transcript reliably.
+- **Returns**: `transcript`, detected `language`, `audio_duration_seconds`, and `provider`.
 
-- **Value Discriminator (`value_type`)**:
-  - `numeric`: Standard numeric values (`14.5`, `12,500` -> `12500.0`, `1.2 x 10^3` -> `1200.0`).
-  - `qualitative`: Text-based findings (`Negative`, `Reactive`, `Normal`) stored in `qualitative_value`.
-  - `bounded_numeric`: Inequality bounds (`<0.5`) stored with scalar float `0.5` and `qualitative_value="<0.5"`.
+### 2. Document Extraction (`POST /api/v1/documents/extract`)
+- **Multipart Upload**: Image/PDF of medical lab report (`.jpg`, `.jpeg`, `.png`, `.webp`, `.pdf`).
+- **Canonical Normalization**:
+  - `numeric`: Numbers (`12.5`, `12,500` -> `12500.0`, `1.2 x 10^3` -> `1200.0`).
+  - `qualitative`: Text-based findings (`Negative`, `Reactive`) in `qualitative_value`.
+  - `bounded_numeric`: Inequality bounds (`<0.5`).
+  - `range`: Range values (`0.8 - 1.2`).
   - `unparsed`: Corrupted OCR rows preserved with `raw_line` verbatim without guessing.
-- **Units**: Normalized to standard SI/medical representations (`gm/dl` -> `g/dL`, `10^3/ul` -> `10^3/µL`, `mmol/l` -> `mmol/L`).
-- **Dates**: Canonical ISO format `YYYY-MM-DD`.
-
-### Non-Lab Report Classifier Pre-Check
-Uploads are evaluated before structured extraction. Non-lab report documents (e.g. receipts, random images) are rejected with a structured HTTP 422 `NOT_A_LAB_REPORT` response.
+- **Units & Dates**: Standard SI units (`gm/dl` -> `g/dL`, `10^3/ul` -> `10^3/µL`) and ISO dates (`YYYY-MM-DD`).
+- **Classifier Pre-check**: Rejects non-lab documents with HTTP 422 `NOT_A_LAB_REPORT` response.
 
 ---
 
-## Architectural Decisions
+## Architectural Decisions Record
 See [DECISIONS.md](DECISIONS.md) for full context on schema trade-offs and adapter design choices.

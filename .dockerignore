@@ -1,0 +1,9 @@
+.git
+.venv
+venv
+ENV
+__pycache__
+*.pyc
+.pytest_cache
+SKILLS_Main_Added
+.env

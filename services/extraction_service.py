@@ -19,17 +19,18 @@ class DocumentExtractionService:
         full_text = ocr_data.get("full_text", "")
 
         # 1. Pre-check classification
-        is_lab_report, class_confidence = LabReportClassifier.classify(full_text)
+        class_is_lab, class_confidence = LabReportClassifier.classify(full_text)
 
-        # Use OCR adapter's quality/type confidence if provided, otherwise classifier confidence
+        # Respect adapter override if explicitly specified in ocr_data
+        is_lab_report = ocr_data.get("is_lab_report", class_is_lab)
         confidence = ocr_data.get("confidence", class_confidence)
 
-        if not is_lab_report and not ocr_data.get("is_lab_report", False):
+        if not is_lab_report:
             return {
                 "is_lab_report": False,
                 "confidence": confidence,
                 "error": "NOT_A_LAB_REPORT",
-                "message": "Uploaded document does not appear to be a medical lab report.",
+                "message": ocr_data.get("reason", "Uploaded document does not appear to be a medical lab report."),
             }
 
         # 2. Extract and normalize metadata (never guess missing fields)

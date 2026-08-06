@@ -1,0 +1,25 @@
+{
+  "full_text": "Rapid Plasma Reagin RPR Syphilis Test Diagnostic Result Patient Mary Watson Date 2026-08-11 Reactive Non-reactive",
+  "is_lab_report": true,
+  "confidence": 0.72,
+  "meta": {
+    "patient_name": "Mary Watson",
+    "age": null,
+    "sex": null,
+    "report_date": "2026-08-11",
+    "lab_name": "Serology Testing Center",
+    "reference_no": "RPR-9921"
+  },
+  "results": [
+    {
+      "test_name": "RPR Syphilis Test",
+      "value": null,
+      "value_type": "qualitative",
+      "qualitative_value": "Non-Reactive",
+      "unit": null,
+      "reference_range": "Non-Reactive",
+      "flag": "Normal",
+      "raw_line": "RPR Syphilis Test        Non-Reactive  N/A       Non-Reactive     Normal"
+    }
+  ]
+}

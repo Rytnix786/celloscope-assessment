@@ -1,0 +1,15 @@
+{
+  "full_text": "Commercial Billing Invoice #INV-2026-991 Billing Address Shipping Terms Net 30 Days Subtotal $450.00 Tax $36.00 Total Due $486.00",
+  "is_lab_report": false,
+  "confidence": 0.15,
+  "reason": "Commercial billing invoice document detected instead of printed medical lab report.",
+  "meta": {
+    "patient_name": null,
+    "age": null,
+    "sex": null,
+    "report_date": null,
+    "lab_name": null,
+    "reference_no": null
+  },
+  "results": []
+}

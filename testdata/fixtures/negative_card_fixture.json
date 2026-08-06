@@ -1,0 +1,15 @@
+{
+  "full_text": "CRP Latex Agglutination Testing Reagent Well Card NC PC T 1 2 3 4 5 6",
+  "is_lab_report": false,
+  "confidence": 0.15,
+  "reason": "Reagent testing well card photo detected instead of printed lab report.",
+  "meta": {
+    "patient_name": null,
+    "age": null,
+    "sex": null,
+    "report_date": null,
+    "lab_name": null,
+    "reference_no": null
+  },
+  "results": []
+}

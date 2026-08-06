@@ -1,0 +1,15 @@
+{
+  "full_text": "CBC Hematology Analyzer Monitor Screen WBC 12.1 RBC 5.53 HGB 20.4 HCT 66.7 PLT 295 Histogram Scatterplot UI Buttons",
+  "is_lab_report": false,
+  "confidence": 0.25,
+  "reason": "Analyzer instrument monitor screen detected instead of printed medical lab report.",
+  "meta": {
+    "patient_name": null,
+    "age": null,
+    "sex": null,
+    "report_date": null,
+    "lab_name": null,
+    "reference_no": null
+  },
+  "results": []
+}

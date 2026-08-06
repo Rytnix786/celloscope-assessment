@@ -1,0 +1,35 @@
+{
+  "full_text": "GNU Health Complete Blood Count Laboratory Report Patient John Doe Age 45 M Date 2026-08-12 Ref GNU-88392 Hemoglobin 14.2 g/dL WBC Count 7.5 10^3/uL Result",
+  "is_lab_report": true,
+  "confidence": 0.70,
+  "meta": {
+    "patient_name": "John Doe",
+    "age": "45",
+    "sex": "M",
+    "report_date": "2026-08-12",
+    "lab_name": "GNU Health Hospital Pathology Laboratory",
+    "reference_no": "GNU-88392"
+  },
+  "results": [
+    {
+      "test_name": "Hemoglobin",
+      "value": 14.2,
+      "value_type": "numeric",
+      "qualitative_value": null,
+      "unit": "g/dL",
+      "reference_range": "13.5 - 17.5",
+      "flag": "Normal",
+      "raw_line": "Hemoglobin       14.2      g/dL     13.5 - 17.5      Normal"
+    },
+    {
+      "test_name": "WBC Count",
+      "value": 7.5,
+      "value_type": "numeric",
+      "qualitative_value": null,
+      "unit": "10^3/µL",
+      "reference_range": "4.0 - 11.0",
+      "flag": "Normal",
+      "raw_line": "WBC Count        7.5       10^3/uL   4.0 - 11.0       Normal"
+    }
+  ]
+}

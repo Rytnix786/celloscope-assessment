@@ -50,44 +50,45 @@ def test_transcribe_non_speech_silence():
     assert "language" in data
 
 
-def test_documents_extract_cbc_analyzer_screen_no_hallucination():
-    report_path = testdata_dir / "documents" / "clean_lab_report.jpg"
+def test_documents_extract_positive_gnuhealth_report():
+    report_path = testdata_dir / "documents" / "positive" / "clean_cbc_report.png"
     with open(report_path, "rb") as f:
         response = client.post(
             "/api/v1/documents/extract",
-            files={"file": ("clean_lab_report.jpg", f, "image/jpeg")},
+            files={"file": ("clean_cbc_report.png", f, "image/png")},
         )
     assert response.status_code == 200
     data = response.json()
     assert data["is_lab_report"] is True
-    assert data["confidence"] == 0.75
+    assert data["confidence"] == 0.95
+    assert data["meta"]["patient_name"] == "John Doe"
+    assert data["meta"]["report_date"] == "2026-08-12"
 
-    # Zero metadata hallucination for analyzer screens
-    assert data["meta"]["patient_name"] is None
-    assert data["meta"]["age"] is None
-    assert data["meta"]["report_date"] is None
-    assert data["meta"]["lab_name"] is None
-
-    # Exact parameters present on screen
-    wbc = next(r for r in data["results"] if r["test_name"] == "WBC")
-    assert wbc["value"] == 12.1
-
-    hgb = next(r for r in data["results"] if r["test_name"] == "HGB")
-    assert hgb["value"] == 20.4
+    hgb = next(r for r in data["results"] if r["test_name"] == "Hemoglobin")
+    assert hgb["value"] == 14.2
     assert hgb["unit"] == "g/dL"
 
-    rbc = next(r for r in data["results"] if r["test_name"] == "RBC")
-    assert rbc["value"] == 5.53
 
-
-def test_documents_extract_non_lab_report_rejection():
-    receipt_path = testdata_dir / "documents" / "non_lab_receipt.jpg"
-    with open(receipt_path, "rb") as f:
+def test_documents_extract_negative_machine_screen_rejection():
+    machine_path = testdata_dir / "documents" / "negative" / "cbc_machine_screen.jpg"
+    with open(machine_path, "rb") as f:
         response = client.post(
             "/api/v1/documents/extract",
-            files={"file": ("non_lab_receipt.jpg", f, "image/jpeg")},
+            files={"file": ("cbc_machine_screen.jpg", f, "image/jpeg")},
         )
     assert response.status_code == 422
     detail = response.json()["detail"]
     assert detail["error"] == "NOT_A_LAB_REPORT"
     assert "confidence" in detail
+
+
+def test_documents_extract_negative_receipt_rejection():
+    receipt_path = testdata_dir / "documents" / "negative" / "receipt.jpg"
+    with open(receipt_path, "rb") as f:
+        response = client.post(
+            "/api/v1/documents/extract",
+            files={"file": ("receipt.jpg", f, "image/jpeg")},
+        )
+    assert response.status_code == 422
+    detail = response.json()["detail"]
+    assert detail["error"] == "NOT_A_LAB_REPORT"

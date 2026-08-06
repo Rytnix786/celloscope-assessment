@@ -1,0 +1,15 @@
+{
+  "full_text": "STAR CAFE & BAKERY Store Receipt #109283 Espresso Coffee $4.50 Chocolate Muffin $7.00 Total Paid $11.50 Thank you for visiting",
+  "is_lab_report": false,
+  "confidence": 0.10,
+  "reason": "Retail purchase receipt detected instead of printed medical lab report.",
+  "meta": {
+    "patient_name": null,
+    "age": null,
+    "sex": null,
+    "report_date": null,
+    "lab_name": null,
+    "reference_no": null
+  },
+  "results": []
+}

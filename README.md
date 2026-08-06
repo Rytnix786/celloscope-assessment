@@ -1,6 +1,6 @@
 # Celloscope AI/ML Take-Home — Speech & Document Extraction
 
-FastAPI microservice providing audio transcription and medical lab report extraction capabilities with strict 3-layer architecture (`api/`, `services/`, `adapters/`), typed settings, and zero-dependency mock adapters.
+FastAPI microservice providing audio transcription (Bengali & English) and medical lab report extraction capabilities with strict 3-layer architecture (`api/`, `services/`, `adapters/`), typed settings, and zero-dependency mock adapters.
 
 ---
 
@@ -37,6 +37,10 @@ services/     -> Business logic & orchestration (strictly ZERO web framework imp
 adapters/     -> Provider & model integrations (the ONLY layer allowed to import provider SDKs).
 ```
 
+### Adapter Pattern & Configuration
+- **Mock Adapters** (`ADAPTER_MODE=mock`): Replays static disk fixtures with zero network overhead, credentials, or model downloads.
+- **Real Adapters** (`ADAPTER_MODE=real`): Activates real STT (Whisper) and OCR (Baidu Unlimited-OCR / Vision) models via environment variables in `.env`.
+
 ---
 
 ## API Endpoints
@@ -60,5 +64,25 @@ adapters/     -> Provider & model integrations (the ONLY layer allowed to import
 
 ---
 
+## Test Data Sourcing (`testdata/`)
+
+Test data is committed under `testdata/` with full provenance documented in [testdata/README.md](testdata/README.md):
+- **Audio Clips**: Real native human voice clips for Bengali (`bn_speech_sample1.wav`) and English (`en_speech_sample1.wav`) sourced from Wikimedia Commons Lingua Libre, plus synthetic silence (`silence.wav`) and white noise (`ambient_noise.wav`).
+- **Reference Transcripts**: Ground-truth text map in `testdata/transcripts/reference_transcripts.json` for Word Error Rate (WER) accuracy calculation.
+- **Document Images**: Real Complete Blood Count scan (`clean_lab_report.jpg`), qualitative CRP photo (`angled_lab_report.jpg`), GNU Health electronic report (`gnuhealth_lab_report.png`), and store receipt (`non_lab_receipt.jpg`).
+
+---
+
+## Known Limitations & Disclosed Gaps
+
+Per assessment guidelines, we explicitly disclose the following known edge cases and design boundaries:
+
+1. **Severely Truncated Lab Reports**: If a photographed report has its header block completely cut off, the classifier pre-check may assign lower confidence scores or populate `meta` fields as `null`.
+2. **Exotic Medical Units**: Unrecognized or non-standard regional measurement units (e.g. customized institutional abbreviations) fall back to being preserved verbatim without forced normalization.
+3. **Overlapping Multi-Speaker Speech**: Heavy multi-speaker crosstalk in audio recordings can increase Word Error Rate (WER) compared to single-speaker clinical dictations.
+4. **Real Adapter GPU Requirements**: Running real local STT/OCR model adapters (`ADAPTER_MODE=real`) locally requires an NVIDIA GPU with at least 8GB VRAM or cloud API API keys configured in `.env`.
+
+---
+
 ## Architectural Decisions Record
-See [DECISIONS.md](DECISIONS.md) for full context on schema trade-offs and adapter design choices.
+See [DECISIONS.md](DECISIONS.md) for full context on model selection, schema trade-offs, non-speech VAD strategy, and layer separation enforcement.

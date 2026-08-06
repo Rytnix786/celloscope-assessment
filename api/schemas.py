@@ -7,6 +7,13 @@ class HealthResponse(BaseModel):
     adapter_mode: str
 
 
+class TranscriptionResponse(BaseModel):
+    transcript: str
+    language: str
+    audio_duration_seconds: float
+    provider: str
+
+
 class LabReportMeta(BaseModel):
     patient_name: Optional[str] = None
     age: Optional[str] = None

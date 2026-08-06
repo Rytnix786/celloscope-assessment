@@ -1,0 +1,61 @@
+{
+  "full_text": "CENTRAL DIAGNOSTIC LABORATORY\nPatient Name: Jane Doe  Age: 34  Sex: F\nReport Date: 12-Aug-2026  Lab Name: Popular Diagnostic  Ref No: REF-88392\nTest Name        Result    Unit      Reference Range  Flag\nHemoglobin       14.2      gm/dl     12.0 - 15.5      Normal\nHBsAg            Negative  N/A       Negative         Normal\nCRP              <0.5      mg/dl     < 5.0            Normal\nWBC Count        12,500    10^3/ul   4.0 - 11.0       High\nPlatelet Count   1.2 x 10^3 10^3/ul  1.5 - 4.5        Low\nCorrupted Artifact Line 12#$%",
+  "meta": {
+    "patient_name": "Jane Doe",
+    "age": "34",
+    "sex": "F",
+    "report_date": "12-Aug-2026",
+    "lab_name": "Popular Diagnostic",
+    "reference_no": "REF-88392"
+  },
+  "raw_lines": [
+    {
+      "test_name": "Hemoglobin",
+      "raw_value": "14.2",
+      "raw_unit": "gm/dl",
+      "raw_reference_range": "12.0 - 15.5",
+      "flag": "Normal",
+      "raw_line": "Hemoglobin       14.2      gm/dl     12.0 - 15.5      Normal"
+    },
+    {
+      "test_name": "HBsAg",
+      "raw_value": "Negative",
+      "raw_unit": null,
+      "raw_reference_range": "Negative",
+      "flag": "Normal",
+      "raw_line": "HBsAg            Negative  N/A       Negative         Normal"
+    },
+    {
+      "test_name": "CRP",
+      "raw_value": "<0.5",
+      "raw_unit": "mg/dl",
+      "raw_reference_range": "< 5.0",
+      "flag": "Normal",
+      "raw_line": "CRP              <0.5      mg/dl     < 5.0            Normal"
+    },
+    {
+      "test_name": "WBC Count",
+      "raw_value": "12,500",
+      "raw_unit": "10^3/ul",
+      "raw_reference_range": "4.0 - 11.0",
+      "flag": "High",
+      "raw_line": "WBC Count        12,500    10^3/ul   4.0 - 11.0       High"
+    },
+    {
+      "test_name": "Platelet Count",
+      "raw_value": "1.2 x 10^3",
+      "raw_unit": "10^3/ul",
+      "raw_reference_range": "1.5 - 4.5",
+      "flag": "Low",
+      "raw_line": "Platelet Count   1.2 x 10^3 10^3/ul  1.5 - 4.5        Low"
+    },
+    {
+      "test_name": "Corrupted Artifact Line",
+      "raw_value": "12#$%",
+      "raw_unit": null,
+      "raw_reference_range": null,
+      "flag": null,
+      "raw_line": "Corrupted Artifact Line 12#$%"
+    }
+  ]
+}

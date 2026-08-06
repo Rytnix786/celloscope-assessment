@@ -1,0 +1,18 @@
+{
+  "en_speech_sample1.wav": {
+    "language": "en",
+    "transcript": "The patient presented with mild fever and fatigue. Complete blood count tests were requested."
+  },
+  "bn_speech_sample1.wav": {
+    "language": "bn",
+    "transcript": "রোগীর শারীরিক পরীক্ষার জন্য রক্ত পরীক্ষা করা প্রয়োজন।"
+  },
+  "silence.wav": {
+    "language": "auto",
+    "transcript": ""
+  },
+  "ambient_noise.wav": {
+    "language": "auto",
+    "transcript": ""
+  }
+}

@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -7,7 +7,60 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  lint-and-quality:
+    name: Lint & Code Quality (Ruff & Mypy)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      - name: Install Lint & Quality Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy -r requirements.txt
+
+      - name: Run Ruff Linter
+        run: ruff check .
+
+      - name: Run Mypy Type Checker
+        run: mypy api services adapters main.py config.py
+
+  architecture-and-security:
+    name: Architecture Layer Separation & Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest -r requirements.txt
+
+      - name: Run AST Layer Separation Audit
+        run: pytest tests/test_layer_separation.py -v
+
+      - name: Security Check - Secret Leak Guard
+        run: |
+          if [ -f .env ]; then
+            echo "ERROR: .env file detected in repo!" && exit 1
+          fi
+          echo "No secrets or .env files detected."
+
+  test-matrix:
+    name: Pytest Suite & Coverage (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,12 +75,30 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
+      - name: Install System Dependencies for Audio Processing
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg libsndfile1
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-asyncio httpx pydub mutagen speechrecognition miniaudio torchaudio
+          pip install pytest pytest-cov pytest-asyncio httpx pydub mutagen speechrecognition miniaudio torchaudio
 
-      - name: Run Test Suite & Layer Separation Audit
+      - name: Run Pytest Suite with Coverage
         run: |
-          python -m pytest tests/ -v
+          pytest --cov=api --cov=services --cov=adapters --cov-report=term-missing tests/ -v
+
+  docker-build-check:
+    name: Docker Build Verification
+    needs: [test-matrix]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Verify Docker Compose Build
+        run: docker compose build

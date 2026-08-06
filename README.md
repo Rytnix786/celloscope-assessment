@@ -3,7 +3,8 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-green.svg)](https://fastapi.tiangolo.com/)
 [![Docker Compose](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
-[![Tests](https://img.shields.io/badge/Tests-24%20Passed-brightgreen.svg)]()
+[![CI/CD Pipeline](https://github.com/Rytnix786/celloscope-assessment/actions/workflows/ci.yml/badge.svg)](https://github.com/Rytnix786/celloscope-assessment/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/Tests-25%20Passed-brightgreen.svg)]()
 
 FastAPI microservice providing multi-lingual audio transcription (Bengali `bn` and English `en`) and medical lab report extraction capabilities. Built with a strict 3-layer architecture (`api/`, `services/`, `adapters/`), typed configuration settings, zero-credential mock mode, and non-hallucinating canonical value normalization.
 
@@ -25,10 +26,10 @@ FastAPI microservice providing multi-lingual audio transcription (Bengali `bn` a
    - Preserves verbatim unparseable text in `raw_line` without forced guessing.
    - Never fabricates metadata on cropped or missing report headers (`null` preservation).
 
-3. **Production Architecture & Seams**:
+3. **Production Architecture & CI/CD Pipeline**:
    - **Strict Layer Separation**: Verified mechanically via AST parsing unit tests (`tests/test_layer_separation.py`). `services/` contains zero FastAPI/Starlette imports. `adapters/` is the only layer allowed to import model SDKs.
+   - **Multi-Stage CI/CD Pipeline**: Automated GitHub Actions pipeline (`.github/workflows/ci.yml`) enforcing 4 quality gates: Ruff linting & Mypy typing, AST layer separation audit, multi-Python (3.11, 3.12) pytest matrix with coverage, and Docker build validation.
    - **Zero-Credential Docker Boot**: `docker compose up` boots out of the box in `ADAPTER_MODE=mock` with zero network calls, credentials, or model downloads.
-   - **Extensible Provider Adapters**: Real mode (`ADAPTER_MODE=real`) connects to OpenAI Whisper / Baidu Unlimited-OCR models seamlessly.
 
 ---
 
@@ -50,11 +51,7 @@ The API interactive documentation will be available at:
 
 ---
 
-### 2. Local Environment Setup
-
-#### Prerequisites
-- Python 3.11+
-- Virtualenv
+### 2. Local Environment Setup & Makefile Commands
 
 ```bash
 # Create and activate virtual environment
@@ -69,16 +66,31 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Start local server
-python main.py
+# Available Makefile Commands:
+make test        # Run unit and integration test suite
+make docker-up   # Start service via Docker Compose
+make lint        # Run layer separation AST audit test
 ```
 
 ---
 
 ### 3. Running the Test Suite
 ```bash
-# Run all 24 automated unit, integration, and layer separation tests
+# Run all 25 automated unit, integration, and layer separation tests
 python -m pytest tests/ -v
+```
+
+---
+
+## CI/CD Pipeline Architecture (`.github/workflows/ci.yml`)
+
+The repository uses GitHub Actions for continuous integration with 4 sequential quality jobs:
+
+```text
+[Git Push / PR] ──► Job 1: Ruff Linting & Mypy Type Checker
+                ──► Job 2: Layer Separation AST Audit & Secret Leak Guard
+                ──► Job 3: Pytest Matrix (Python 3.11 & 3.12) + Coverage
+                └──► Job 4: Docker Compose Build Verification
 ```
 
 ---
@@ -93,7 +105,8 @@ testdata/
 │   ├── en_speech_sample1.wav           # Native English spoken voice ("doctor")
 │   ├── bn_speech_sample1.wav           # Native Bengali spoken voice ("গোলাপ")
 │   ├── silence.wav                     # 3-second zero-amplitude silence
-│   └── ambient_noise.wav               # 3-second background white noise
+│   ├── ambient_noise.wav               # 3-second background white noise
+│   └── my-real-voice1.mp3              # Real user voice recording ("hey so can you hear me...")
 ├── transcripts/
 │   └── reference_transcripts.json      # Ground-truth reference text map for WER accuracy evaluation
 ├── documents/

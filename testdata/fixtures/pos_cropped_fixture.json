@@ -1,35 +1,35 @@
 {
-  "full_text": "Complete Blood Count Laboratory Report Hemoglobin 14.2 g/dL WBC Count 7.5 10^3/uL Platelet Count 250 10^3/uL Result",
+  "full_text": "GNU Health Complete Blood Count Laboratory Report Hemoglobin 12.0 g/dL WBC Count 6.7 10^3/uL Platelet Count 240 10^3/uL Result",
   "is_lab_report": true,
   "confidence": 0.65,
   "meta": {
     "patient_name": null,
     "age": null,
     "sex": null,
-    "report_date": "2026-08-12",
-    "lab_name": "GNU Health Hospital Pathology Laboratory",
+    "report_date": null,
+    "lab_name": null,
     "reference_no": null
   },
   "results": [
     {
       "test_name": "Hemoglobin",
-      "value": 14.2,
+      "value": 12.0,
       "value_type": "numeric",
       "qualitative_value": null,
       "unit": "g/dL",
-      "reference_range": "13.5 - 17.5",
+      "reference_range": "12.0 - 15.5",
       "flag": "Normal",
-      "raw_line": "Hemoglobin       14.2      g/dL     13.5 - 17.5      Normal"
+      "raw_line": "Hemoglobin       12.0      g/dL     12.0 - 15.5      Normal"
     },
     {
       "test_name": "WBC Count",
-      "value": 7.5,
+      "value": 6.7,
       "value_type": "numeric",
       "qualitative_value": null,
       "unit": "10^3/µL",
-      "reference_range": "4.0 - 11.0",
+      "reference_range": "4.5 - 11.0",
       "flag": "Normal",
-      "raw_line": "WBC Count        7.5       10^3/uL   4.0 - 11.0       Normal"
+      "raw_line": "WBC Count        6.7       10^3/uL   4.5 - 11.0       Normal"
     }
   ]
 }

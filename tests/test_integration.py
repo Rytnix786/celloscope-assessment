@@ -61,12 +61,57 @@ def test_documents_extract_positive_gnuhealth_report():
     data = response.json()
     assert data["is_lab_report"] is True
     assert data["confidence"] == 0.95
-    assert data["meta"]["patient_name"] == "John Doe"
-    assert data["meta"]["report_date"] == "2026-08-12"
+    assert data["meta"]["patient_name"] == "Ana Betz"
+    assert data["meta"]["report_date"] == "2011-08-25"
 
     hgb = next(r for r in data["results"] if r["test_name"] == "Hemoglobin")
-    assert hgb["value"] == 14.2
+    assert hgb["value"] == 12.0
     assert hgb["unit"] == "g/dL"
+
+    wbc = next(r for r in data["results"] if r["test_name"] == "WBC Count")
+    assert wbc["value"] == 6.7
+
+
+def test_documents_extract_positive_angled_report():
+    report_path = testdata_dir / "documents" / "positive" / "angled_cbc_report.jpg"
+    with open(report_path, "rb") as f:
+        response = client.post(
+            "/api/v1/documents/extract",
+            files={"file": ("angled_cbc_report.jpg", f, "image/jpeg")},
+        )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_lab_report"] is True
+    assert data["confidence"] == 0.78
+    assert data["meta"]["patient_name"] == "Ana Betz"
+
+
+def test_documents_extract_positive_dark_report():
+    report_path = testdata_dir / "documents" / "positive" / "dark_cbc_report.jpg"
+    with open(report_path, "rb") as f:
+        response = client.post(
+            "/api/v1/documents/extract",
+            files={"file": ("dark_cbc_report.jpg", f, "image/jpeg")},
+        )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_lab_report"] is True
+    assert data["confidence"] == 0.70
+
+
+def test_documents_extract_positive_cropped_report_zero_metadata():
+    report_path = testdata_dir / "documents" / "positive" / "cropped_report.jpg"
+    with open(report_path, "rb") as f:
+        response = client.post(
+            "/api/v1/documents/extract",
+            files={"file": ("cropped_report.jpg", f, "image/jpeg")},
+        )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["is_lab_report"] is True
+    assert data["meta"]["patient_name"] is None
+    assert data["meta"]["report_date"] is None
+    assert data["meta"]["lab_name"] is None
 
 
 def test_documents_extract_negative_machine_screen_rejection():

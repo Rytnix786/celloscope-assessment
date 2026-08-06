@@ -1,35 +1,35 @@
 {
-  "full_text": "GNU Health Complete Blood Count Laboratory Report Patient John Doe Age 45 M Date 2026-08-12 Ref GNU-88392 Hemoglobin 14.2 g/dL WBC Count 7.5 10^3/uL Result",
+  "full_text": "GNU Health Complete Blood Count Laboratory Report Patient Ana Betz Age 34 F Date 2011-08-25 Ref GNU-2011-0825 Hemoglobin 12.0 g/dL WBC Count 6.7 10^3/uL Result",
   "is_lab_report": true,
   "confidence": 0.72,
   "meta": {
-    "patient_name": "John Doe",
-    "age": "45",
-    "sex": "M",
-    "report_date": "2026-08-12",
+    "patient_name": "Ana Betz",
+    "age": "34",
+    "sex": "F",
+    "report_date": "2011-08-25",
     "lab_name": "GNU Health Hospital Pathology Laboratory",
-    "reference_no": "GNU-88392"
+    "reference_no": "GNU-2011-0825"
   },
   "results": [
     {
       "test_name": "Hemoglobin",
-      "value": 14.2,
+      "value": 12.0,
       "value_type": "numeric",
       "qualitative_value": null,
       "unit": "g/dL",
-      "reference_range": "13.5 - 17.5",
+      "reference_range": "12.0 - 15.5",
       "flag": "Normal",
-      "raw_line": "Hemoglobin       14.2      g/dL     13.5 - 17.5      Normal"
+      "raw_line": "Hemoglobin       12.0      g/dL     12.0 - 15.5      Normal"
     },
     {
       "test_name": "WBC Count",
-      "value": 7.5,
+      "value": 6.7,
       "value_type": "numeric",
       "qualitative_value": null,
       "unit": "10^3/µL",
-      "reference_range": "4.0 - 11.0",
+      "reference_range": "4.5 - 11.0",
       "flag": "Normal",
-      "raw_line": "WBC Count        7.5       10^3/uL   4.0 - 11.0       Normal"
+      "raw_line": "WBC Count        6.7       10^3/uL   4.5 - 11.0       Normal"
     }
   ]
 }

@@ -1,18 +1,22 @@
 {
   "en_speech_sample1.wav": {
     "language": "en",
-    "transcript": "The patient presented with mild fever and fatigue. Complete blood count tests were requested."
+    "transcript": "doctor",
+    "source": "Wikimedia Commons / Lingua Libre (Real Human Voice)"
   },
   "bn_speech_sample1.wav": {
     "language": "bn",
-    "transcript": "রোগীর শারীরিক পরীক্ষার জন্য রক্ত পরীক্ষা করা প্রয়োজন।"
+    "transcript": "গোলাপ",
+    "source": "Wikimedia Commons / Lingua Libre (Real Human Voice)"
   },
   "silence.wav": {
     "language": "auto",
-    "transcript": ""
+    "transcript": "",
+    "source": "Synthetic Silence"
   },
   "ambient_noise.wav": {
     "language": "auto",
-    "transcript": ""
+    "transcript": "",
+    "source": "Synthetic Ambient Noise"
   }
 }

@@ -10,8 +10,8 @@ This directory contains the committed evaluation dataset for testing the Speech 
 testdata/
 ├── README.md                           # Sourcing origins, selection rationale, and WER evaluation
 ├── audio/
-│   ├── en_speech_sample1.wav           # English medical speech audio
-│   ├── bn_speech_sample1.wav           # Bengali medical speech audio
+│   ├── en_speech_sample1.wav           # Real human voice English speech audio ("doctor")
+│   ├── bn_speech_sample1.wav           # Real human voice Bengali speech audio ("গোলাপ")
 │   ├── silence.wav                     # 3-second pure silence (0 speech)
 │   └── ambient_noise.wav               # 3-second background white noise (0 speech)
 ├── transcripts/
@@ -29,9 +29,9 @@ testdata/
 
 ## Origins and Selection Rationale
 
-### 1. Audio Clips (`testdata/audio/`)
-- **`en_speech_sample1.wav`**: 16kHz PCM WAV clip containing English medical dictation. Selected to verify English speech recognition, word accuracy, and audio duration calculation.
-- **`bn_speech_sample1.wav`**: 16kHz PCM WAV clip containing Bengali speech dictation (`"রোগীর শারীরিক পরীক্ষার জন্য রক্ত পরীক্ষা করা প্রয়োজন।"`). Selected to verify Bengali (`bn`) script transcription support.
+### 1. Real Human Voice Audio Clips (`testdata/audio/`)
+- **`en_speech_sample1.wav`**: Real human voice audio clip of a native speaker pronouncing **"doctor"**. Sourced from [Wikimedia Commons / Lingua Libre](https://commons.wikimedia.org/wiki/Category:Lingua_Libre_pronunciation-eng) (`LL-Q1860 (eng)-Vealhurl-doctor.wav`). Selected to verify real English speech recognition and audio duration calculation.
+- **`bn_speech_sample1.wav`**: Real human voice audio clip of a native speaker pronouncing **"গোলাপ"** (Golap / Rose). Sourced from [Wikimedia Commons / Lingua Libre](https://commons.wikimedia.org/wiki/Category:Lingua_Libre_pronunciation-ben) (`LL-Q9610 (ben)-Titodutta-গোলাপ.wav`). Selected to verify real Bengali (`bn`) script transcription support.
 - **`silence.wav`**: 3 seconds of zero-amplitude audio. Selected to ensure the audio transcription endpoint handles non-speech silence gracefully without crashing or hallucinating phantom text.
 - **`ambient_noise.wav`**: 3 seconds of low-amplitude white noise. Selected to verify robust VAD (Voice Activity Detection) behavior under background ambient noise.
 

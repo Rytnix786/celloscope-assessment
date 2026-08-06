@@ -1,6 +1,6 @@
 {
-  "transcript": "The patient presented with mild fever and fatigue. Complete blood count tests were requested.",
+  "transcript": "doctor",
   "language": "en",
-  "duration_seconds": 4.0,
+  "duration_seconds": 1.2,
   "provider": "mock-whisper-v3"
 }
